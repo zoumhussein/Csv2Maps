@@ -40,5 +40,15 @@ public interface Parser {
 	 */
 	List<HashMap<String, String>> parseFile(String fileFullpath)
 			throws FileNotFoundException, IOException;
+	
+	/**
+	 * parse a file with the given separator character
+	 * @param input file
+	 * @param separator character
+	 * @return List of maps (one map for each record line in the file)
+	 * @throws IOException 
+	 */
+	List<HashMap<String, String>> parseFile(File file, char separator) throws FileNotFoundException, IOException;
+
 
 }

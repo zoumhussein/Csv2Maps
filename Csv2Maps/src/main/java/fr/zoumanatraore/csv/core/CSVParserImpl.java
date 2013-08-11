@@ -1,11 +1,14 @@
 package fr.zoumanatraore.csv.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import com.csvreader.CsvReader;
@@ -27,6 +30,7 @@ import com.csvreader.CsvReader;
 @Component
 public class CSVParserImpl implements Parser {
 
+	private static final Log LOGGER = LogFactory.getLog(CSVParserImpl.class);
 	/**
 	 * <p>
 	 * 	Parse a CVS file and extract map for each record line.
@@ -40,49 +44,10 @@ public class CSVParserImpl implements Parser {
 		//JavaCSV API reader
 		CsvReader reader = null;
 		
-		//Map to contain per Line (columnName,value)
-		HashMap<String, String> recordLineData = new HashMap<String, String>();  
-		
-		//List to contain all lines (columnName,value) Map
-		List<HashMap<String, String>> listOfLines = new ArrayList<HashMap<String,String>>();
-		
 		//Parse the CSV
 		reader = new CsvReader(file.getAbsolutePath());
 
-		//Debug columns number
-		System.out.println("columns count: "+reader.getColumnCount());
-		
-		//Debug headers
-		reader.readHeaders();
-		System.out.println("headers count: "+reader.getHeaderCount());
-		
-		String[] headers = reader.getHeaders();
-		for(String columnName : headers){
-			System.out.println("column name: "+columnName);
-		}
-		
-		//Debug line by line the data
-		int numberOfLines = 0;
-		boolean hasRecords = reader.readRecord();
-		while(hasRecords){
-			for(String columnName : headers){
-//				System.out.println("column name: "+columnName+" with value: "+reader.get(columnName));
-				
-				//Put in the Map the value for each column on the record line
-				recordLineData.put(columnName, reader.get(columnName));
-			}
-			
-			//At the end of the record line processing: we put the line Map into the list of lines Maps
-			listOfLines.add(recordLineData);
-
-			//We increment the line counter and check if there is another line record to process
-			numberOfLines ++;
-			hasRecords = reader.readRecord();
-		}
-
-		System.out.println("number of line in the CSV file: "+numberOfLines);
-			
-		return listOfLines;
+		return formatCsvContent(reader);
 	}
 	
 	/**
@@ -95,6 +60,74 @@ public class CSVParserImpl implements Parser {
 	 */
 	public List<HashMap<String, String>> parseFile(final String fileFullpath) throws IOException {
 		return parseFile(new File(fileFullpath));
+	}
+
+	
+	
+	/**
+	 * <p>
+	 * 	Parse a CVS file (with a given separator character) and extract map for each record line.
+	 * </p>
+	 * @param file: input file
+	 * @param separator
+	 * @return List of maps (one map for each record line in the file)
+	 * @throws IOException 
+	 */
+	public List<HashMap<String, String>> parseFile(File file, char separator)
+			throws FileNotFoundException, IOException {
+				
+		//JavaCSV API reader
+		CsvReader reader = null;
+		
+		//Parse the CSV
+		reader = new CsvReader(file.getAbsolutePath(), separator);
+
+		return formatCsvContent(reader);
+	}
+
+	private List<HashMap<String, String>> formatCsvContent(CsvReader reader) throws IOException {
+		
+		//Map to contain per Line (columnName,value)
+		HashMap<String, String> recordLineData = new HashMap<String, String>();  
+		
+		//List to contain all lines (columnName,value) Map
+		List<HashMap<String, String>> listOfLines = new ArrayList<HashMap<String,String>>();
+				
+		//Debug columns number
+		LOGGER.debug("columns count: "+reader.getColumnCount());
+		
+		//Debug headers
+		reader.readHeaders();
+		LOGGER.debug("headers count: "+reader.getHeaderCount());
+		
+		String[] headers = reader.getHeaders();
+		for(String columnName : headers){
+			LOGGER.debug("column name: "+columnName);
+		}
+		
+		//Debug line by line the data
+		int numberOfLines = 0;
+		boolean hasRecords = reader.readRecord();
+		while(hasRecords){
+			for(String columnName : headers){
+				
+				//Put in the Map the value for each column on the record line
+				recordLineData.put(columnName, reader.get(columnName));
+			}
+			
+			//At the end of the record line processing: we put the line Map into the list of lines Maps
+			listOfLines.add(recordLineData);
+
+			//We increment the line counter and check if there is another line record to process
+			numberOfLines ++;
+			recordLineData = new HashMap<String, String>();
+			hasRecords = reader.readRecord();
+		}
+
+		LOGGER.debug("number of line in the CSV file: "+numberOfLines);
+			
+		return listOfLines;
+		
 	}
 
 }

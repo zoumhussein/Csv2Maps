@@ -2,11 +2,12 @@ package fr.zoumanatraore.csv.core.test;
 
 import java.io.File;
 
+import junit.framework.TestCase;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.zoumanatraore.csv.core.CSVParserImpl;
 import fr.zoumanatraore.csv.core.Parser;
-import junit.framework.TestCase;
 
 public class CSVParserImplTest extends TestCase {
 

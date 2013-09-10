@@ -61,9 +61,20 @@ public class CSVParserImpl implements Parser {
 	public List<HashMap<String, String>> parseFile(final String fileFullpath) throws IOException {
 		return parseFile(new File(fileFullpath));
 	}
+	
+	/**
+	 * <p>
+	 * 	Parse a CVS file and extract map for each record line.
+	 * </p>
+	 * @param fileFullpath: full path of the input file
+	 * @param separator: CSV separator character
+	 * @return List of maps (one map for each record line in the file)
+	 * @throws IOException 
+	 */
+	public List<HashMap<String, String>> parseFile(final String fileFullpath, char separator) throws IOException {
+		return parseFile(new File(fileFullpath), separator);
+	}
 
-	
-	
 	/**
 	 * <p>
 	 * 	Parse a CVS file (with a given separator character) and extract map for each record line.

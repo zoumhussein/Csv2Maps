@@ -14,7 +14,7 @@ import fr.zoumanatraore.csv.core.Parser;
 public class CSVParserTestCase {
 
 	private Parser serviceCSVParser = new CSVParserImpl();
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -25,9 +25,11 @@ public class CSVParserTestCase {
 
 	@Test
 	public void testParseFileFile() {
-		File sampleFile = new File("C:\\XML\\input\\test.csv");
+		File sampleCSV = new File("C:\\XML\\input\\test2.csv");
+		File sampleCSVWithSemiColon = new File("C:\\XML\\input\\test.csv");
 		try {
-			serviceCSVParser.parseFile(sampleFile);
+			serviceCSVParser.parseFile(sampleCSV);
+			serviceCSVParser.parseFile(sampleCSVWithSemiColon, ';');
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue("Exception caught during the test", false);

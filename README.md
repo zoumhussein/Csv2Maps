@@ -10,5 +10,5 @@ End of it with CSV2Maps !!!
 
 In 2 lines, you can have your CSV file nicely parsed and you get in result a perfectly fit data format: 
 		
-		CSVParserImpl csvParser = new CSVParserImpl();
+		Parser csvParser = new CSVParserImpl();
 		List<HashMap<String, String>> listOfMaps = csvParser.parseFile(myCSVFile, myCSVDelimiter);

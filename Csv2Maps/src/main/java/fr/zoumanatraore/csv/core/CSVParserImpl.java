@@ -3,6 +3,7 @@ package fr.zoumanatraore.csv.core;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,7 +105,7 @@ public class CSVParserImpl implements Parser {
 		CsvReader reader = null;
 
 		// Parse the CSV
-		reader = new CsvReader(file.getAbsolutePath(), separator);
+		reader = new CsvReader(file.getAbsolutePath(), separator, StandardCharsets.UTF_8);
 
 		return formatCsvContent(reader);
 	}
